@@ -174,7 +174,11 @@ class TimedGame(Game):
             time_flag = self.check_time(datetime.datetime.now())
 
         if time_flag:
-            
+            winner = max(self.players.total)
+            print()
+            print()
+            print(f"Time's up!")
+            print(f"{winner} is vicotorious!")
         # show the winner
 
                 
@@ -197,8 +201,8 @@ def make_player(player_type, player_name):
 if __name__ == '__main__':
     print("Welcome to Pig")
     print()
-    p1 = Player("John")
-    p2 = Player("Jane")
+    p1 = Player("h", "John")
+    p2 = Player("c", "HAL")
     pig_game = Game(p1, p2)
     pig_game.play_game()
 
