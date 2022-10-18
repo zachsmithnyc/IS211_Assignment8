@@ -95,7 +95,7 @@ class ComputerPlayer(Player):
             die = throw_the_die()
             if die == 1:
                 print(f"Roll: {die}")
-                print(f"{player.name} scratched!")
+                print(f"{self.name} scratched!")
                 scratch = True
                 break 
 
@@ -107,7 +107,7 @@ class ComputerPlayer(Player):
                 print()
                 print(f"Points this turn: {turn_total}")
                 print()
-                print(f"Score on hold: {self.potential}")
+                print(f"Score on hold: {self.total + turn_total}")
                 print()
                 print(f"Current Score: {self.total}")
                 print()
@@ -161,6 +161,7 @@ class TimedGame(Game):
         """
         return (time_now - self.start_time).total_seconds() > self.time_limit
 
+
     def play_game(self):
         current_player = self.players[0]
         time_flag = False
@@ -170,16 +171,22 @@ class TimedGame(Game):
                 current_player.play_turn()
                 if current_player.total >= 100:
                     break
+                if time_flag:
+                    break
 
             time_flag = self.check_time(datetime.datetime.now())
 
-        if time_flag:
-            winner = max(self.players.total)
-            print()
-            print()
-            print(f"Time's up!")
-            print(f"{winner} is vicotorious!")
-        # show the winner
+            if player1.total > player2.total:
+                print()
+                print()
+                print(f"Time's up!")
+                print(f"{player1.name} is vicotorious!")
+            
+            else:
+                print()
+                print()
+                print(f"Time's up!")
+                print(f"{player2.name} is vicotorious!")
 
                 
 def make_player(player_type, player_name):
@@ -195,15 +202,30 @@ def make_player(player_type, player_name):
         return Player(player_name)
     else:
         raise ValueError("I don't know what to build!!!!")
+
+def make_game(player1, player2, timed):
+    if timed.upper() == "Y":
+        return TimedGame(player1, player2, 60)
+        
+    elif timed.upper() == "N":
+        return Game(player1, player2)
+    
+    else:
+        raise ValueError("I don't know that game type")
     
        
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--player1")
+    parser.add_argument("--player2")
+    parser.add_argument("--timed")
+    args = parser.parse_args()
+    player1 = make_player(args.player1, "John")
+    player2 = make_player(args.player2, "HAL")
     print("Welcome to Pig")
     print()
-    p1 = Player("h", "John")
-    p2 = Player("c", "HAL")
-    pig_game = Game(p1, p2)
+    pig_game = make_game(player1, player2, args.timed)
     pig_game.play_game()
 
     
