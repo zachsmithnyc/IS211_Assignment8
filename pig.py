@@ -181,12 +181,14 @@ class TimedGame(Game):
                 print()
                 print(f"Time's up!")
                 print(f"{player1.name} is vicotorious!")
+                exit()
             
             else:
                 print()
                 print()
                 print(f"Time's up!")
                 print(f"{player2.name} is vicotorious!")
+                exit()
 
                 
 def make_player(player_type, player_name):
@@ -203,15 +205,14 @@ def make_player(player_type, player_name):
     else:
         raise ValueError("I don't know what to build!!!!")
 
-def make_game(player1, player2, timed):
-    if timed.upper() == "Y":
-        return TimedGame(player1, player2, 60)
+def make_game(player1, player2, timed=False):
+    if timed:
+        return TimedGame(player1, player2, float(60))
         
-    elif timed.upper() == "N":
+    else:
         return Game(player1, player2)
     
-    else:
-        raise ValueError("I don't know that game type")
+   
     
        
 
@@ -219,7 +220,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--player1")
     parser.add_argument("--player2")
-    parser.add_argument("--timed")
+    parser.add_argument("--timed", action='store_true')
     args = parser.parse_args()
     player1 = make_player(args.player1, "John")
     player2 = make_player(args.player2, "HAL")
