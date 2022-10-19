@@ -90,28 +90,35 @@ class ComputerPlayer(Player):
         print(f"Current player {self.name}")
         print()
         turn_total = 0
-        scratch = False
-        while turn_total >= min(self.total, 100 - self.total):
+        roll_hold = "r"
+        while roll_hold != "h":
             die = throw_the_die()
             if die == 1:
                 print(f"Roll: {die}")
                 print(f"{self.name} scratched!")
                 scratch = True
                 break 
-
-            if not scratch:
-                self.total += turn_total 
-                print("-" * 50)
-                print(f"Roll: {die}")
-                print()
-                print()
-                print(f"Points this turn: {turn_total}")
-                print()
-                print(f"Score on hold: {self.total + turn_total}")
-                print()
-                print(f"Current Score: {self.total}")
-                print()
             
+            turn_total += die
+            print("-" * 50)
+            print(f"Roll: {die}")
+            print()
+            print()
+            print(f"Points this turn: {turn_total}")
+            print()
+            print(f"Score on hold: {self.total + turn_total}")
+            print()
+            print(f"Current Score: {self.total}")
+            print()
+
+            if turn_total >= 25:
+                roll_hold = "h"
+            if self.total + turn_total >= 100:
+                roll_hold = "h"
+
+        if roll_hold == "h":
+            self.total += turn_total
+        
             self.show
 
 
