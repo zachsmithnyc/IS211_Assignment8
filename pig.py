@@ -1,4 +1,5 @@
 import argparse
+from operator import not_
 import random
 import sys
 import datetime
@@ -119,7 +120,7 @@ class ComputerPlayer(Player):
         if roll_hold == "h":
             self.total += turn_total
         
-            self.show
+        self.show
 
 
 class Game:
@@ -166,36 +167,39 @@ class TimedGame(Game):
         Check for the time
         :return: True if time expired
         """
-        return (time_now - self.start_time).total_seconds() > self.time_limit
+        return (time_now - self.start_time) > self.time_limit
+    
+    def print_winner(self, player1, player2):
+        if player1.total > player2.total:
+            print()
+            print()
+            print(f"{player1.name} is victorious!")
+
+        if player2.total > player1.total:
+            print()
+            print()
+            print(f"{player2.name} is victorious!")
 
 
     def play_game(self):
         current_player = self.players[0]
         time_flag = False
-        while not self.check_winner() or not time_flag:
+        while not self.check_winner():
             for player in self.players:
                 current_player = player
                 current_player.play_turn()
                 if current_player.total >= 100:
                     break
-                if time_flag:
-                    break
-
+                elif time_flag:
+                    self.print_winner(player1, player2)
+                    exit()
+                
             time_flag = self.check_time(datetime.datetime.now())
-
-            if player1.total > player2.total:
-                print()
-                print()
-                print(f"Time's up!")
-                print(f"{player1.name} is vicotorious!")
-                exit()
+              
+        self.print_winner(player1, player2)
             
-            else:
-                print()
-                print()
-                print(f"Time's up!")
-                print(f"{player2.name} is vicotorious!")
-                exit()
+            
+
 
                 
 def make_player(player_type, player_name):
@@ -214,7 +218,7 @@ def make_player(player_type, player_name):
 
 def make_game(player1, player2, timed=False):
     if timed:
-        return TimedGame(player1, player2, float(60))
+        return TimedGame(player1, player2, datetime.timedelta(minutes=1))
         
     else:
         return Game(player1, player2)
